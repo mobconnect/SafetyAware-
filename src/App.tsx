@@ -2,6 +2,7 @@ import React, { useState, useMemo } from "react";
 import Header from "./components/Header";
 import BookletCard from "./components/BookletCard";
 import BookletModal from "./components/BookletModal";
+import LicensingModal from "./components/LicensingModal";
 import AdvisorChat from "./components/AdvisorChat";
 import CompliancePlan from "./components/CompliancePlan";
 import SavingsCalculator from "./components/SavingsCalculator";
@@ -12,6 +13,7 @@ import LucideIcon from "./components/LucideIcon";
 export default function App() {
   const [activeTab, setActiveTab] = useState<"booklets" | "advisor" | "planner" | "savings">("booklets");
   const [selectedBookletForModal, setSelectedBookletForModal] = useState<Booklet | null>(null);
+  const [isLicensingOpen, setIsLicensingOpen] = useState<boolean>(false);
   
   // States for Safety AI Advisor communication bridge
   const [initialPromptForAdvisor, setInitialPromptForAdvisor] = useState<string | null>(null);
@@ -389,6 +391,12 @@ export default function App() {
         onDiscuss={(b) => handleConsultAI(b)}
       />
 
+      {/* Licensing & Compliance Modal */}
+      <LicensingModal
+        isOpen={isLicensingOpen}
+        onClose={() => setIsLicensingOpen(false)}
+      />
+
       {/* Global Footer */}
       <footer className="bg-[#0A0A0C] border-t border-white/5 py-8 mt-12 text-slate-500 font-sans text-xs">
         <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
@@ -443,6 +451,13 @@ export default function App() {
               <span>ABN: 59 726 146 692</span>
               <span className="text-slate-700">|</span>
               <span>DUNS: 74-906-8766</span>
+              <span className="text-slate-700">|</span>
+              <button 
+                onClick={() => setIsLicensingOpen(true)}
+                className="text-amber-500/80 hover:text-amber-400 underline cursor-pointer transition-colors outline-none font-sans"
+              >
+                Licensing, Disclaimers & Attributions
+              </button>
             </div>
           </div>
           <div className="flex flex-col items-center md:items-end space-y-2">
