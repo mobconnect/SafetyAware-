@@ -52,7 +52,13 @@ import {
   Table,
   PhoneCall,
   Phone,
-  LineChart
+  LineChart,
+  ShieldCheck,
+  PlayCircle,
+  Cpu,
+  FileDown,
+  ChevronDown,
+  Copy
 } from "lucide-react";
 
 const iconMap: Record<string, React.ComponentType<any>> = {
@@ -108,7 +114,13 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   Table,
   PhoneCall,
   Phone,
-  LineChart
+  LineChart,
+  ShieldCheck,
+  PlayCircle,
+  Cpu,
+  FileDown,
+  ChevronDown,
+  Copy
 };
 
 interface LucideIconProps extends React.ComponentProps<"svg"> {

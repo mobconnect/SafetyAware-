@@ -390,12 +390,69 @@ export default function App() {
       />
 
       {/* Global Footer */}
-      <footer className="bg-[#0A0A0C] border-t border-white/5 py-6 mt-12 text-center text-slate-500 font-sans text-xs">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row justify-between items-center space-y-2 sm:space-y-0">
-          <p>© {new Date().getFullYear()} SafetyAware. Tailored to Australian Work Health and Safety (WHS) Guidelines.</p>
-          <div className="flex space-x-4 text-[11px] font-medium text-slate-500 animate-pulse">
-            <span className="bg-white/5 px-2 py-1 rounded border border-white/10 font-mono text-slate-400">Ver: 2026.07.05</span>
-            <span className="bg-white/5 px-2 py-1 rounded border border-white/10 text-slate-400">Client-Authored Portal</span>
+      <footer className="bg-[#0A0A0C] border-t border-white/5 py-8 mt-12 text-slate-500 font-sans text-xs">
+        <div className="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex flex-col items-center md:items-start space-y-3">
+            <div className="flex items-center space-x-3">
+              {/* Australian National Flag */}
+              <svg viewBox="0 0 600 300" className="w-8 h-5 rounded shadow-sm border border-white/10 object-cover shrink-0" aria-label="Australian National Flag">
+                <rect width="600" height="300" fill="#012169" />
+                <g>
+                  <line x1="0" y1="0" x2="300" y2="150" stroke="#FFFFFF" strokeWidth="30" />
+                  <line x1="300" y1="0" x2="0" y2="150" stroke="#FFFFFF" strokeWidth="30" />
+                  <line x1="0" y1="0" x2="300" y2="150" stroke="#C8102E" strokeWidth="10" />
+                  <line x1="300" y1="0" x2="0" y2="150" stroke="#C8102E" strokeWidth="10" />
+                  <rect x="120" y="0" width="60" height="150" fill="#FFFFFF" />
+                  <rect x="0" y="60" width="300" height="30" fill="#FFFFFF" />
+                  <rect x="130" y="0" width="40" height="150" fill="#C8102E" />
+                  <rect x="0" y="70" width="300" height="10" fill="#C8102E" />
+                </g>
+                <g transform="translate(150, 225) scale(35)">
+                  <polygon points="0,-1 0.22,-0.43 0.78,-0.62 0.43,-0.09 0.97,0.22 0.38,0.3 0.43,0.9 0,0.5 -0.43,0.9 -0.38,0.3 -0.97,0.22 -0.43,-0.09 -0.78,-0.62 -0.22,-0.43" fill="#FFFFFF" />
+                </g>
+                <g transform="translate(450, 240) scale(18)">
+                  <polygon points="0,-1 0.22,-0.43 0.78,-0.62 0.43,-0.09 0.97,0.22 0.38,0.3 0.43,0.9 0,0.5 -0.43,0.9 -0.38,0.3 -0.97,0.22 -0.43,-0.09 -0.78,-0.62 -0.22,-0.43" fill="#FFFFFF" />
+                </g>
+                <g transform="translate(390, 135) scale(18)">
+                  <polygon points="0,-1 0.22,-0.43 0.78,-0.62 0.43,-0.09 0.97,0.22 0.38,0.3 0.43,0.9 0,0.5 -0.43,0.9 -0.38,0.3 -0.97,0.22 -0.43,-0.09 -0.78,-0.62 -0.22,-0.43" fill="#FFFFFF" />
+                </g>
+                <g transform="translate(450, 65) scale(18)">
+                  <polygon points="0,-1 0.22,-0.43 0.78,-0.62 0.43,-0.09 0.97,0.22 0.38,0.3 0.43,0.9 0,0.5 -0.43,0.9 -0.38,0.3 -0.97,0.22 -0.43,-0.09 -0.78,-0.62 -0.22,-0.43" fill="#FFFFFF" />
+                </g>
+                <g transform="translate(510, 125) scale(18)">
+                  <polygon points="0,-1 0.22,-0.43 0.78,-0.62 0.43,-0.09 0.97,0.22 0.38,0.3 0.43,0.9 0,0.5 -0.43,0.9 -0.38,0.3 -0.97,0.22 -0.43,-0.09 -0.78,-0.62 -0.22,-0.43" fill="#FFFFFF" />
+                </g>
+                <g transform="translate(475, 175) scale(10)">
+                  <polygon points="0,-1 0.588,0.809 -0.951,-0.309 0.951,-0.309 -0.588,0.809" fill="#FFFFFF" />
+                </g>
+              </svg>
+
+              {/* Australian Aboriginal Flag */}
+              <svg viewBox="0 0 3 2" className="w-8 h-5 rounded shadow-sm border border-white/10 object-cover shrink-0" aria-label="Australian Aboriginal Flag">
+                <rect width="3" height="1" fill="#000000" />
+                <rect y="1" width="3" height="1" fill="#E00000" />
+                <circle cx="1.5" cy="1" r="0.4" fill="#FFCC00" />
+              </svg>
+
+              <span className="text-[11px] text-slate-400 font-sans tracking-wide">Australian National & Aboriginal flags respectfully displayed</span>
+            </div>
+            <p className="text-center md:text-left text-slate-400 font-sans leading-relaxed">
+              Copyright © 2026 SafetyAware. All Rights Reserved. Tailored to Australian Work Health and Safety (WHS) Guidelines.
+            </p>
+            <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center md:justify-start text-[11px] text-slate-500 font-mono">
+              <span>ABN: 59 726 146 692</span>
+              <span className="text-slate-700">|</span>
+              <span>DUNS: 74-906-8766</span>
+            </div>
+          </div>
+          <div className="flex flex-col items-center md:items-end space-y-2">
+            <div className="flex space-x-3 text-[11px] font-medium text-slate-500">
+              <span className="bg-white/5 px-2.5 py-1 rounded border border-white/10 font-mono text-slate-400">Ver: 2026.07.05</span>
+              <span className="bg-white/5 px-2.5 py-1 rounded border border-white/10 text-slate-400">Client-Authored Portal</span>
+            </div>
+            <p className="text-[10px] text-slate-500 font-sans text-center md:text-right">
+              We acknowledge the Traditional Custodians of land throughout Australia.
+            </p>
           </div>
         </div>
       </footer>
