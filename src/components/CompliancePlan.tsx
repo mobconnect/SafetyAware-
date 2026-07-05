@@ -40,14 +40,20 @@ export default function CompliancePlan({ booklets, onOpenBooklet }: CompliancePl
   const [isScanning, setIsScanning] = useState(false);
   const [showLogs, setShowLogs] = useState(true);
 
-  // Fetch initial audit results
+  // Fetch initial audit results and set up periodic polling
   useEffect(() => {
-    fetch("/api/compliance/audit-results")
-      .then((res) => res.json())
-      .then((data) => {
-        setAuditResults(data);
-      })
-      .catch((err) => console.error("Error fetching audit results:", err));
+    const fetchResults = () => {
+      fetch("/api/compliance/audit-results")
+        .then((res) => res.json())
+        .then((data) => {
+          setAuditResults(data);
+        })
+        .catch((err) => console.error("Error fetching audit results:", err));
+    };
+
+    fetchResults();
+    const interval = setInterval(fetchResults, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   // Run audit trigger
