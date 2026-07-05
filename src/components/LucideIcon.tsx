@@ -47,7 +47,12 @@ import {
   CheckCircle,
   Check,
   ArrowRight,
-  BookMarked
+  BookMarked,
+  TrendingUp,
+  Table,
+  PhoneCall,
+  Phone,
+  LineChart
 } from "lucide-react";
 
 const iconMap: Record<string, React.ComponentType<any>> = {
@@ -98,7 +103,12 @@ const iconMap: Record<string, React.ComponentType<any>> = {
   CheckCircle,
   Check,
   ArrowRight,
-  BookMarked
+  BookMarked,
+  TrendingUp,
+  Table,
+  PhoneCall,
+  Phone,
+  LineChart
 };
 
 interface LucideIconProps extends React.ComponentProps<"svg"> {

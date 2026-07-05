@@ -2,8 +2,8 @@ import { motion } from "motion/react";
 import LucideIcon from "./LucideIcon";
 
 interface HeaderProps {
-  activeTab: "booklets" | "advisor" | "planner";
-  setActiveTab: (tab: "booklets" | "advisor" | "planner") => void;
+  activeTab: "booklets" | "advisor" | "planner" | "savings";
+  setActiveTab: (tab: "booklets" | "advisor" | "planner" | "savings") => void;
   advisorUnread?: boolean;
 }
 
@@ -30,7 +30,8 @@ export default function Header({ activeTab, setActiveTab, advisorUnread }: Heade
           <nav className="flex space-x-1" aria-label="Tabs">
             {[
               { id: "booklets", label: "Catalog", icon: "BookOpen" },
-              { id: "advisor", label: "Safety Advisor AI", icon: "Brain", badge: advisorUnread },
+              { id: "savings", label: "Super & Savings", icon: "TrendingUp" },
+              { id: "advisor", label: "Safety Advisor", icon: "Brain", badge: advisorUnread },
               { id: "planner", label: "WHS Planner", icon: "ClipboardCheck" }
             ].map((tab) => {
               const isActive = activeTab === tab.id;

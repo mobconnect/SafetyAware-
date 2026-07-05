@@ -336,6 +336,42 @@ Format the output strictly as a JSON array of objects according to the schema.`;
               explanation: "The PAYG instalments system helps self-employed people, sole traders, and investors meet their income tax obligations by making regular payments during the financial year, preventing a massive tax bill during annual lodgments."
             }
           ];
+        } else if (booklet.name.toLowerCase().includes("superannuation")) {
+          questions = [
+            {
+              question: "Starting 1 July 2025 and throughout the 2026/2027 financial year, what is the mandatory compulsory Superannuation Guarantee (SG) rate that employers in Australia must pay?",
+              options: [
+                "A) 9.5% of ordinary time earnings",
+                "B) 10.0% of ordinary time earnings",
+                "C) 12.0% of ordinary time earnings",
+                "D) 15.0% of ordinary time earnings"
+              ],
+              correctAnswer: 2,
+              explanation: "Under the Australian statutory superannuation timeline, the compulsory Superannuation Guarantee (SG) rate reaches and is fixed at 12.0% of ordinary time earnings starting on 1 July 2025, protecting the long-term wealth of employees."
+            },
+            {
+              question: "Which of the following is an active support service provided by the Australian Taxation Office (ATO) specifically to assist First Nations workers in finding lost superannuation or consolidating multiple accounts?",
+              options: [
+                "A) The ATO Indigenous Helpline on 13 10 30",
+                "B) The Australian Superannuation Association online web blog",
+                "C) A mandatory paper form distributed only to rural bank branches",
+                "D) The standard Australian business registration portal"
+              ],
+              correctAnswer: 0,
+              explanation: "The ATO operates a dedicated First Nations Information Helpline on 13 10 30 to support Indigenous Australians, helping them navigate superannuation, retrieve lost super accounts, and avoid double set-up fees across multiple funds."
+            },
+            {
+              question: "What is the statutory superannuation entitlement rule for young employees under the age of 18 in Australia?",
+              options: [
+                "A) Under-18s are never entitled to superannuation contributions.",
+                "B) Under-18s are entitled to superannuation contributions if they work more than 30 hours in a given week, regardless of monthly earnings.",
+                "C) Under-18s only get super paid if their parents register as a corporate entity.",
+                "D) Under-18s are only paid super on voluntary overtime shifts exceeding 50 hours."
+              ],
+              correctAnswer: 1,
+              explanation: "Under Australian law, if an employee is under 18 years of age, they are entitled to employer-paid superannuation if they work more than 30 hours in a week, regardless of how much they earn."
+            }
+          ];
         } else {
           questions = [
             {
@@ -549,6 +585,102 @@ Format the output strictly as a JSON array of objects according to the schema.`;
       `;
     }
 
+    const isSuper = filename.toLowerCase().includes("superannuation");
+    let superannuationSectionHtml = "";
+    if (isSuper) {
+      superannuationSectionHtml = `
+        <!-- Section 4: Superannuation & Retirement Safety Standards (2026/2027) -->
+        <div class="space-y-5 border-t border-amber-500/20 pt-6">
+          <div class="flex items-center space-x-2">
+            <span class="bg-amber-500 text-black text-[10px] font-mono uppercase font-bold px-2.5 py-1 rounded">SUPERANNUATION SPECIALIST</span>
+            <h3 class="text-sm font-mono font-bold uppercase tracking-wider text-amber-500">Section 4: Australian Superannuation & Retirement Safety Standards (2026/2027)</h3>
+          </div>
+          
+          <p class="text-sm leading-relaxed text-slate-300 font-sans">
+            Under Australian workplace laws, superannuation is a critical pillar of statutory worker wellbeing. Employers must guarantee correct retirement contributions to protect employees against poverty in retirement and satisfy comprehensive employment safety rules.
+          </p>
+
+          <!-- Core Statutory Rules -->
+          <div class="bg-darkcard border border-amber-500/10 p-5 rounded-2xl space-y-4">
+            <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider font-mono">1. Compulsory Superannuation Guarantee (SG) Laws</h4>
+            <div class="space-y-3 text-xs text-slate-300 font-sans">
+              <p class="leading-relaxed">
+                <strong>Statutory Rate (12%):</strong> Starting 1 July 2025 and throughout the 2026/2027 financial periods, employers are legally required to pay a minimum of <strong>12%</strong> of your Ordinary Time Earnings (OTE) directly into your nominated superannuation account.
+              </p>
+              <p class="leading-relaxed">
+                <strong>No Minimum Salary Threshold:</strong> The old rule requiring workers to earn at least $450/month to be eligible for superannuation has been completely abolished. You are entitled to super contributions from the very first dollar you earn.
+              </p>
+              <p class="leading-relaxed">
+                <strong>Quarterly Payment Obligations:</strong> Employers must pay your super at least quarterly. If they pay late or fail to pay, they are subject to the Superannuation Guarantee Charge (SGC) and significant ATO fines.
+              </p>
+            </div>
+          </div>
+
+          <!-- Indigenous & Youth Sections -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div class="bg-red-500/5 border border-red-500/10 p-4 rounded-xl space-y-2">
+              <span class="bg-red-500/20 text-red-400 text-[9px] font-mono font-bold px-2 py-0.5 rounded">FIRST NATIONS SUPPORT</span>
+              <h4 class="text-xs font-bold text-white uppercase font-mono">Indigenous Worker Super Rights</h4>
+              <ul class="text-xs text-slate-400 space-y-2 list-disc list-inside">
+                <li><strong>ATO Helpline (13 10 30):</strong> Call the Australian Taxation Office's First Nations Information Line to find lost super and consolidate multiple duplicate accounts to stop paying double administration fees.</li>
+                <li><strong>Estate Planning:</strong> It is crucial to complete a binding death benefit nomination to ensure benefits are distributed according to kinship structures.</li>
+              </ul>
+            </div>
+
+            <div class="bg-sky-500/5 border border-sky-500/10 p-4 rounded-xl space-y-2">
+              <span class="bg-sky-500/20 text-sky-400 text-[9px] font-mono font-bold px-2 py-0.5 rounded">YOUTH SAFETY STANDARDS</span>
+              <h4 class="text-xs font-bold text-white uppercase font-mono">Young Worker Super Rights</h4>
+              <ul class="text-xs text-slate-400 space-y-2 list-disc list-inside">
+                <li><strong>Under-18 Work Rule:</strong> If you are under 18, you are legally entitled to super if you work more than <strong>30 hours in a week</strong>, regardless of your monthly earnings.</li>
+                <li><strong>Insurance Protection:</strong> Super funds cannot automatically charge under-25s or low-balance members (<$6,000) for life insurance unless requested.</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Phone Directory -->
+          <div class="bg-[#1D1D24] border border-white/5 p-4 rounded-xl space-y-3">
+            <h4 class="text-xs font-bold text-white uppercase font-mono">2. Australian Superannuation Providers & Contact Helpline</h4>
+            <p class="text-[11px] text-slate-400">If you need to change your fund, find your lost super, or consolidate accounts, call these registered Australian companies directly:</p>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs font-mono">
+              <div class="p-2 bg-black/20 rounded border border-white/5 flex justify-between">
+                <span class="text-slate-300">AustralianSuper:</span>
+                <a href="tel:1300300273" class="text-amber-400 hover:underline">1300 300 273</a>
+              </div>
+              <div class="p-2 bg-black/20 rounded border border-white/5 flex justify-between">
+                <span class="text-slate-300">ART (Retirement Trust):</span>
+                <a href="tel:131184" class="text-amber-400 hover:underline">13 11 84</a>
+              </div>
+              <div class="p-2 bg-black/20 rounded border border-white/5 flex justify-between">
+                <span class="text-slate-300">REST Super:</span>
+                <a href="tel:1300300778" class="text-amber-400 hover:underline">1300 300 778</a>
+              </div>
+              <div class="p-2 bg-black/20 rounded border border-white/5 flex justify-between">
+                <span class="text-slate-300">Hostplus:</span>
+                <a href="tel:1300467875" class="text-amber-400 hover:underline">1300 467 875</a>
+              </div>
+              <div class="p-2 bg-black/20 rounded border border-white/5 flex justify-between">
+                <span class="text-slate-300">Aware Super:</span>
+                <a href="tel:1300650873" class="text-amber-400 hover:underline">1300 650 873</a>
+              </div>
+              <div class="p-2 bg-black/20 rounded border border-white/5 flex justify-between">
+                <span class="text-slate-300">HESTA Super:</span>
+                <a href="tel:1800813327" class="text-amber-400 hover:underline">1800 813 327</a>
+              </div>
+              <div class="p-2 bg-black/20 rounded border border-white/5 flex justify-between">
+                <span class="text-slate-300">Cbus Super:</span>
+                <a href="tel:1300361787" class="text-amber-400 hover:underline">1300 361 787</a>
+              </div>
+              <div class="p-2 bg-black/20 rounded border border-white/5 flex justify-between">
+                <span class="text-slate-300">UniSuper:</span>
+                <a href="tel:1800331685" class="text-amber-400 hover:underline">1800 331 685</a>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
     res.send(`
 <!DOCTYPE html>
 <html lang="en" class="h-full bg-[#0F0F12] text-slate-100">
@@ -708,9 +840,10 @@ Format the output strictly as a JSON array of objects according to the schema.`;
             </div>
           </div>
         </div>
-        \${ndisSectionHtml}
-        \${selfEmployedSectionHtml}
-        \${taxSectionHtml}
+        ${ndisSectionHtml}
+        ${selfEmployedSectionHtml}
+        ${taxSectionHtml}
+        ${superannuationSectionHtml}
       </div>
     </section>
 

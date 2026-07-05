@@ -4,12 +4,13 @@ import BookletCard from "./components/BookletCard";
 import BookletModal from "./components/BookletModal";
 import AdvisorChat from "./components/AdvisorChat";
 import CompliancePlan from "./components/CompliancePlan";
+import SavingsCalculator from "./components/SavingsCalculator";
 import { booklets } from "./data/booklets";
 import { Booklet, BookletGroup, BookletYear, BookletsFilter } from "./types";
 import LucideIcon from "./components/LucideIcon";
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<"booklets" | "advisor" | "planner">("booklets");
+  const [activeTab, setActiveTab] = useState<"booklets" | "advisor" | "planner" | "savings">("booklets");
   const [selectedBookletForModal, setSelectedBookletForModal] = useState<Booklet | null>(null);
   
   // States for Safety AI Advisor communication bridge
@@ -374,6 +375,10 @@ export default function App() {
               onOpenBooklet={(b) => setSelectedBookletForModal(b)}
             />
           </div>
+        )}
+
+        {activeTab === "savings" && (
+          <SavingsCalculator />
         )}
       </main>
 

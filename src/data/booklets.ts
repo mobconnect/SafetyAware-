@@ -549,5 +549,38 @@ export const booklets: Booklet[] = [
     iconName: "FileText",
     audience: "Sole Traders, Contractors & Employees",
     year: "Both"
+  },
+  {
+    name: "indigenous_remote_superannuation_guide_2026.pdf",
+    title: "Indigenous & Remote Superannuation Guide 2026",
+    path: "all_pdf_booklets_no_index/indigenous_remote_superannuation_guide_2026.pdf",
+    group: "Indigenous and Remote",
+    tags: ["indigenous-and-remote", "safetyaware", "superannuation", "finance", "2026", "2027"],
+    description: "Comprehensive superannuation guide custom-tailored for First Nations and remote employees, including lost account recovery support, ATO Indigenous Helpline details, and elder estate benefit planning.",
+    iconName: "HeartHandshake",
+    audience: "First Nations Employees & Remote Communities",
+    year: "2026"
+  },
+  {
+    name: "young_employees_superannuation_handbook_2026.pdf",
+    title: "Young Employees Superannuation Handbook 2026",
+    path: "all_pdf_booklets_no_index/young_employees_superannuation_handbook_2026.pdf",
+    group: "Young and General",
+    tags: ["young-and-general", "safetyaware", "superannuation", "finance", "2026", "2027"],
+    description: "Youth-focused handbook on retirement savings, understanding the 30-hour work rule for under-18s, fee minimization strategies, and optional insurance advice.",
+    iconName: "UserCheck",
+    audience: "First-Time Job Seekers, Apprentices & Young Workers",
+    year: "2026"
+  },
+  {
+    name: "all_industries_superannuation_contributions_2026.pdf",
+    title: "All-Industries Superannuation & Contributions Booklet 2026",
+    path: "all_pdf_booklets_no_index/all_industries_superannuation_contributions_2026.pdf",
+    group: "Core and Support",
+    tags: ["core-and-support", "safetyaware", "superannuation", "finance", "2026", "2027"],
+    description: "The complete employer/employee superannuation reference guide, outlining the mandatory 12% contribution rates, quarterly payment dates, and personal tax-deductible super caps.",
+    iconName: "Scale",
+    audience: "All Employers, Sole Traders & Employees",
+    year: "2026"
   }
 ];
