@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Booklet } from "../types";
 import LucideIcon from "./LucideIcon";
+import { jsPDF } from "jspdf";
 
 interface CompliancePlanProps {
   booklets: Booklet[];
@@ -96,6 +97,251 @@ export default function CompliancePlan({ booklets, onOpenBooklet }: CompliancePl
 
   const relevantBooklets = getRelevantBooklets();
 
+  // Export Safety Plan as a clean, styled PDF
+  const handleExportPDF = () => {
+    const doc = new jsPDF({
+      orientation: "portrait",
+      unit: "mm",
+      format: "a4",
+    });
+
+    const primaryColor = [22, 22, 26]; // Dark slate background (#16161A)
+    const accentColor = [245, 158, 11]; // Amber gold (#F59E0B)
+    const darkText = [30, 41, 59]; // Slate 800
+
+    let curPageNum = 1;
+
+    // Helper to draw common page structures
+    const drawPageBordersAndFooter = (pageNum: number) => {
+      // Draw a sleek frame or border
+      doc.setDrawColor(241, 245, 249);
+      doc.setLineWidth(0.5);
+      doc.rect(8, 8, 194, 281);
+
+      // Draw footer
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(148, 163, 184); // slate-400
+      doc.text("SafetyAware WHS Compliance Portal • Personal Workplace Roadmap", 15, 284);
+      doc.text(`Page ${pageNum}`, 195, 284, { align: "right" });
+    };
+
+    // Draw First Page Header
+    doc.setFillColor(primaryColor[0], primaryColor[1], primaryColor[2]);
+    doc.rect(12, 12, 186, 36, "F");
+
+    // Accent line at the bottom of the banner
+    doc.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
+    doc.rect(12, 47, 186, 1.5, "F");
+
+    // Header Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(15);
+    doc.text("SAFETYAWARE WHS PLANNER", 18, 24);
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(200, 200, 200);
+    doc.text("Official Australian WHS Roadmap & Compliance Guidelines", 18, 30);
+
+    // Header Metadata on Right Side
+    doc.setTextColor(255, 255, 255);
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    const sectorName = sectors.find(s => s.value === selectedSector)?.name || selectedSector;
+    doc.text(sectorName.toUpperCase(), 186, 24, { align: "right" });
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(8.5);
+    doc.setTextColor(180, 180, 180);
+    doc.text(`Generated: ${new Date().toLocaleDateString("en-AU")}`, 186, 30, { align: "right" });
+    doc.text(`Progress: ${progressPercent}% (${completedCount}/${tasks.length} Done)`, 186, 35, { align: "right" });
+
+    drawPageBordersAndFooter(curPageNum);
+
+    let y = 56;
+
+    // SECTION 1: EXECUTIVE SUMMARY
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+    doc.text("1. EXECUTIVE COMPLIANCE SUMMARY", 15, y);
+    
+    // Draw section accent line
+    doc.setDrawColor(accentColor[0], accentColor[1], accentColor[2]);
+    doc.setLineWidth(0.4);
+    doc.line(15, y + 2, 80, y + 2);
+
+    y += 8;
+
+    // Dynamic executive summary text
+    let summaryText = "";
+    if (selectedSector === "Hospitality") {
+      summaryText = "This compliance roadmap outline is tailored to Hospitality & Food services under current Australian legislation (Work Health and Safety Act 2011). Persons Conducting a Business or Undertaking (PCBUs) hold strict primary duty-of-care obligations to eliminate or minimize risks surrounding hot oil preparation, kitchen hand fatigue, heavy loads, wet slip hazards, and toxic/bullying physical workspaces. Workplaces must display active safety guides, run quarterly safety inductions, and actively audit safe systems of work.";
+    } else if (selectedSector === "Construction") {
+      summaryText = "This compliance roadmap outline is tailored to Building & Construction environments under current Australian model WHS regulations. Key priorities focus on verifying White Cards, scaffold structural safety, heights risk mitigation plans, falling object control, and certified industrial-grade PPE standards. Employers must conduct regular toolbox talks, monitor high-risk equipment licenses, and document all safety audits.";
+    } else if (selectedSector === "AgedCare") {
+      summaryText = "This compliance roadmap outline is tailored to Aged Care & Health Support services. Key legislative requirements focus on patient manual lifting codes, workplace hygiene standards, sharps risk management, and chemical disinfectant storage protocols. Care facilities must train staff continuously on hydraulic lifter operation, verify infection controls, and ensure emergency response lines are active.";
+    } else if (selectedSector === "Office") {
+      summaryText = "This compliance roadmap outline is tailored to General Office Admin environments. In modern Australian workplaces, psychological safety is legislatively treated with the same importance as physical safety under modern Psychosocial Hazard regulations. Employers must manage risks surrounding workplace stressors, bullying, cyber-harassment, fatigue, and promote respectful interpersonal communication alongside ergonomic assessments.";
+    } else if (selectedSector === "Retail") {
+      summaryText = "This compliance roadmap outline is tailored to Retail Operations. Key safety priorities center on safe vertical shelf stacking, emergency evacuation clearance, cash-safety measures, heavy manual stock handling, and wet or slippery surfaces. Frontline retail staff must be inducted on hazard notification protocols, proper lifting ergonomics, and basic incident response procedures.";
+    } else { // Remote
+      summaryText = "This compliance roadmap outline is tailored to Indigenous & Remote Projects. Remote sites require rigorous planning for extreme climates, satellite communication links, specific medical evacuation plans, and field first-aid training. Under current guidelines, the incorporation of cultural safety, respectful community co-design of safety guidelines, and mental health peer networks are vital components of compliant workspaces.";
+    }
+
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(9);
+    doc.setTextColor(80, 80, 80);
+    const summaryLines = doc.splitTextToSize(summaryText, 180);
+    doc.text(summaryLines, 15, y);
+    y += (summaryLines.length * 4.8) + 6;
+
+    // SECTION 2: CHECKLIST MILESTONES
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+    doc.text("2. COMPLIANCE CHECKLIST MILESTONES", 15, y);
+    
+    // Draw section accent line
+    doc.setDrawColor(accentColor[0], accentColor[1], accentColor[2]);
+    doc.setLineWidth(0.4);
+    doc.line(15, y + 2, 80, y + 2);
+
+    y += 8;
+
+    tasks.forEach((task) => {
+      const taskLines = doc.splitTextToSize(task.title, 148);
+      const cardHeight = Math.max(18, 12 + (taskLines.length * 4.5));
+
+      // Check for page overflow
+      if (y + cardHeight > 270) {
+        doc.addPage();
+        curPageNum++;
+        drawPageBordersAndFooter(curPageNum);
+        y = 20; // Reset Y on new page
+      }
+
+      // Draw a subtle background container for each task
+      doc.setFillColor(248, 250, 252);
+      doc.rect(15, y, 180, cardHeight, "F");
+      
+      // Draw status box on the left, vertically centered
+      const boxY = y + (cardHeight - 12) / 2;
+      if (task.completed) {
+        doc.setFillColor(16, 185, 129); // Emerald-500
+        doc.rect(18, boxY, 12, 12, "F");
+        doc.setTextColor(255, 255, 255);
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(8);
+        doc.text("OK", 24, boxY + 8.5, { align: "center" });
+      } else {
+        doc.setDrawColor(203, 213, 225); // Slate-300
+        doc.setFillColor(255, 255, 255);
+        doc.rect(18, boxY, 12, 12, "FD");
+        doc.setTextColor(148, 163, 184); // Slate-400
+        doc.setFont("helvetica", "normal");
+        doc.setFontSize(6.5);
+        doc.text("PEND", 24, boxY + 7.5, { align: "center" });
+      }
+
+      // Draw category badge
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(8);
+      let catBg = [239, 246, 255]; // Light blue
+      let catText = [29, 78, 216]; // Dark blue
+      
+      if (task.category === "Training") {
+        catBg = [254, 243, 199];
+        catText = [180, 83, 9];
+      } else if (task.category === "Materials") {
+        catBg = [243, 232, 255];
+        catText = [109, 40, 217];
+      } else if (task.category === "Audits") {
+        catBg = [254, 226, 226];
+        catText = [185, 28, 28];
+      }
+      
+      // Badge background
+      doc.setFillColor(catBg[0], catBg[1], catBg[2]);
+      doc.rect(34, y + 2.5, 22, 5, "F");
+      
+      // Badge text
+      doc.setTextColor(catText[0], catText[1], catText[2]);
+      doc.setFontSize(6.5);
+      doc.text(task.category.toUpperCase(), 45, y + 6, { align: "center" });
+
+      // Draw task description wrapping
+      doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+      doc.setFont("helvetica", task.completed ? "normal" : "bold");
+      doc.setFontSize(8.5);
+      doc.text(taskLines, 34, y + 12);
+
+      y += cardHeight + 3; // add small gap between cards
+    });
+
+    // SECTION 3: RECOMMENDED MATERIAL
+    if (y > 230) {
+      doc.addPage();
+      curPageNum++;
+      drawPageBordersAndFooter(curPageNum);
+      y = 20;
+    } else {
+      y += 4;
+    }
+
+    doc.setFont("helvetica", "bold");
+    doc.setFontSize(11);
+    doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+    doc.text("3. MANDATORY WHS DIGITAL COMPREHENSION MATERIAL", 15, y);
+    
+    // Draw section accent line
+    doc.setDrawColor(accentColor[0], accentColor[1], accentColor[2]);
+    doc.setLineWidth(0.4);
+    doc.line(15, y + 2, 110, y + 2);
+
+    y += 8;
+
+    relevantBooklets.forEach((b) => {
+      const bookletTitleLines = doc.splitTextToSize(b.title, 170);
+      const bHeight = 12 + (bookletTitleLines.length * 4.5);
+
+      if (y + bHeight > 270) {
+        doc.addPage();
+        curPageNum++;
+        drawPageBordersAndFooter(curPageNum);
+        y = 20;
+      }
+
+      doc.setFillColor(255, 255, 255);
+      doc.setDrawColor(226, 232, 240);
+      doc.rect(15, y, 180, bHeight, "FD");
+
+      // Draw a gold accent strip on the left of each booklet reference
+      doc.setFillColor(accentColor[0], accentColor[1], accentColor[2]);
+      doc.rect(15, y, 2.5, bHeight, "F");
+
+      // Booklet Title
+      doc.setFont("helvetica", "bold");
+      doc.setFontSize(9.5);
+      doc.setTextColor(darkText[0], darkText[1], darkText[2]);
+      doc.text(bookletTitleLines, 21, y + 6.5);
+
+      // Booklet info line
+      doc.setFont("helvetica", "normal");
+      doc.setFontSize(8);
+      doc.setTextColor(100, 116, 139);
+      doc.text(`Group: ${b.group}   |   Audience: ${b.audience}   |   Ref Path: ${b.path}`, 21, y + bHeight - 4.5);
+
+      y += bHeight + 3;
+    });
+
+    // Save File
+    const sanitizedSector = sectorName.toLowerCase().replace(/[^a-z0-9]/g, "_");
+    doc.save(`SafetyAware_WHS_Roadmap_${sanitizedSector}.pdf`);
+  };
+
   // Export Safety Plan to clipboard
   const handleExport = () => {
     const planText = `===========================================
@@ -179,14 +425,23 @@ Keep your workplace safe, inclusive, and legally compliant!
             />
           </div>
 
-          {/* Export action */}
-          <button
-            onClick={handleExport}
-            className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-[#0F0F12] font-sans font-bold text-xs rounded-xl shadow-md shadow-amber-500/10 flex items-center justify-center space-x-2 cursor-pointer transition-all outline-none"
-          >
-            <LucideIcon name="Download" size={13} className="text-[#0F0F12]" />
-            <span>Copy Completed WHS Plan</span>
-          </button>
+          {/* Export action buttons */}
+          <div className="space-y-2">
+            <button
+              onClick={handleExportPDF}
+              className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-[#0F0F12] font-sans font-bold text-xs rounded-xl shadow-md shadow-amber-500/10 flex items-center justify-center space-x-2 cursor-pointer transition-all outline-none"
+            >
+              <LucideIcon name="FileDown" size={13} className="text-[#0F0F12]" />
+              <span>Export Roadmap as PDF</span>
+            </button>
+            <button
+              onClick={handleExport}
+              className="w-full py-2 bg-transparent hover:bg-white/5 border border-white/10 hover:border-white/20 text-slate-300 font-sans font-semibold text-xs rounded-xl flex items-center justify-center space-x-2 cursor-pointer transition-all outline-none"
+            >
+              <LucideIcon name="Copy" size={13} className="text-slate-400" />
+              <span>Copy as Plain Text</span>
+            </button>
+          </div>
         </div>
       </div>
 
