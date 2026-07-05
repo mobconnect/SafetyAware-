@@ -32,4 +32,5 @@ export interface ChatMessage {
   role: "user" | "assistant";
   content: string;
   timestamp: string;
+  sources?: { title: string; url: string }[];
 }

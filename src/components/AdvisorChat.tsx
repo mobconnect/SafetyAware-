@@ -259,7 +259,8 @@ export default function AdvisorChat({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           message: textToSend,
-          history: serverHistory
+          history: serverHistory,
+          selectedBookletName: selectedBooklet?.name || null
         })
       });
 
@@ -274,6 +275,7 @@ export default function AdvisorChat({
         id: `ai-${Date.now()}`,
         role: "assistant",
         content: data.response,
+        sources: data.sources || [],
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
       };
 
@@ -356,6 +358,30 @@ export default function AdvisorChat({
                   <div className="space-y-1 text-sm leading-relaxed">
                     {isUser ? msg.content : parseMarkdown(msg.content)}
                   </div>
+
+                  {/* Grounding Sources */}
+                  {!isUser && msg.sources && msg.sources.length > 0 && (
+                    <div className="mt-4 pt-3 border-t border-white/5 space-y-2">
+                      <div className="flex items-center space-x-1.5 text-[10px] font-mono text-amber-500 uppercase tracking-wider font-bold">
+                        <LucideIcon name="ExternalLink" size={11} className="text-amber-500" />
+                        <span>Dynamic WHS Legislative Sources (Google Search)</span>
+                      </div>
+                      <div className="grid grid-cols-1 gap-1.5 mt-1">
+                        {msg.sources.map((src, sIdx) => (
+                          <a
+                            key={sIdx}
+                            href={src.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center space-x-1.5 text-[11px] text-slate-300 hover:text-amber-400 bg-white/[0.02] hover:bg-amber-500/5 border border-white/5 hover:border-amber-500/20 px-2.5 py-1.5 rounded-lg transition-all"
+                          >
+                            <LucideIcon name="ShieldCheck" size={11} className="text-amber-500/80 flex-shrink-0" />
+                            <span className="truncate flex-1 font-medium">{src.title}</span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
                 
                 {/* Message footer actions */}
