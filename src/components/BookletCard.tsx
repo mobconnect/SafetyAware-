@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { Booklet } from "../types";
 import LucideIcon from "./LucideIcon";
@@ -10,6 +11,34 @@ interface BookletCardProps {
 }
 
 export default function BookletCard({ booklet, onOpenDetails, onDiscuss }: BookletCardProps) {
+  const [quizScore, setQuizScore] = useState<number | null>(null);
+
+  useEffect(() => {
+    const loadScore = () => {
+      try {
+        const stored = localStorage.getItem(`safetyaware-quiz-${booklet.name}`);
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          if (parsed && typeof parsed.score === "number") {
+            setQuizScore(parsed.score);
+          }
+        } else {
+          setQuizScore(null);
+        }
+      } catch (err) {
+        console.error("Failed to load quiz score in BookletCard:", err);
+      }
+    };
+
+    loadScore();
+
+    // Listen for completion events to dynamically update
+    window.addEventListener("quiz-completed", loadScore);
+    return () => {
+      window.removeEventListener("quiz-completed", loadScore);
+    };
+  }, [booklet.name]);
+
   // Define dynamic accent colors based on group to make groups visually scannable
   const getGroupStyle = (group: string) => {
     switch (group) {
@@ -71,10 +100,22 @@ export default function BookletCard({ booklet, onOpenDetails, onDiscuss }: Bookl
           <span className={`text-[10px] font-mono uppercase font-bold tracking-wider px-2.5 py-1 rounded-full border ${styles.bg}`}>
             {booklet.group}
           </span>
-          {/* Year Badge */}
-          <span className="bg-white/5 text-slate-400 text-[10px] font-mono px-2 py-0.5 rounded-md border border-white/10">
-            {booklet.year === "Both" ? "2026/27" : booklet.year}
-          </span>
+          <div className="flex items-center space-x-1.5 flex-shrink-0">
+            {quizScore !== null && (
+              <span className={`text-[9px] font-mono font-bold uppercase tracking-wider px-1.5 py-0.5 rounded border flex items-center space-x-0.5 ${
+                quizScore === 3
+                  ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20"
+                  : "bg-amber-500/10 text-amber-400 border-amber-500/20"
+              }`} title={`Latest comprehension score: ${quizScore}/3`}>
+                <LucideIcon name="Award" size={10} />
+                <span>Quiz: {quizScore}/3</span>
+              </span>
+            )}
+            {/* Year Badge */}
+            <span className="bg-white/5 text-slate-400 text-[10px] font-mono px-2 py-0.5 rounded-md border border-white/10">
+              {booklet.year === "Both" ? "2026/27" : booklet.year}
+            </span>
+          </div>
         </div>
 
         {/* Title */}
@@ -101,7 +142,7 @@ export default function BookletCard({ booklet, onOpenDetails, onDiscuss }: Bookl
           className="text-amber-500 hover:text-amber-400 font-sans font-semibold text-xs flex items-center space-x-1.5 transition-colors cursor-pointer outline-none"
         >
           <LucideIcon name="BookOpen" size={14} />
-          <span>Full Details</span>
+          <span>Full Details & Quiz</span>
         </button>
 
         <button
