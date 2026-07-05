@@ -527,5 +527,27 @@ export const booklets: Booklet[] = [
     iconName: "CloudRain",
     audience: "Regional Apprentices & Remote Trainees",
     year: "2026"
+  },
+  {
+    name: "self_employed_workplace_safety_2026.pdf",
+    title: "Self-Employed Workplace Safety Booklet 2026",
+    path: "all_pdf_booklets_no_index/self_employed_workplace_safety_2026.pdf",
+    group: "Core and Support",
+    tags: ["core-and-support", "safetyaware", "self-employed", "sole-trader", "2026", "2027"],
+    description: "Crucial compliance guide for self-employed individuals and sole traders, covering work health and safety duties, emergency first aid protocols, risk assessments, and mental health awareness to mitigate the impacts of isolation.",
+    iconName: "Brain",
+    audience: "Sole Traders, Freelancers & Self-Employed Persons",
+    year: "2026"
+  },
+  {
+    name: "australian_tax_information_booklet_2026_2027.pdf",
+    title: "Australian Tax Information Booklet 2026/2027",
+    path: "all_pdf_booklets_no_index/australian_tax_information_booklet_2026_2027.pdf",
+    group: "Core and Support",
+    tags: ["core-and-support", "safetyaware", "tax", "finance", "2026", "2027"],
+    description: "Comprehensive tax guidelines, statutory obligations, registration details, and compliance support for sole traders, self-employed professionals, and employees for the 2026/2027 financial year.",
+    iconName: "FileText",
+    audience: "Sole Traders, Contractors & Employees",
+    year: "Both"
   }
 ];

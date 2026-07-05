@@ -226,41 +226,153 @@ Format the output strictly as a JSON array of objects according to the schema.`;
 
       // Dynamic custom fallback if API is not configured or fails
       if (!questions || !Array.isArray(questions) || questions.length === 0) {
-        questions = [
-          {
-            question: `Which of the following describes the correct implementation duty regarding the safety protocols in the booklet "${booklet.title}"?`,
-            options: [
-              "A) Safety guidelines are optional and can be disregarded if timelines are tight.",
-              `B) The target group (${booklet.audience}) must collaborate to execute safe systems of work.`,
-              "C) Safety duties are solely held by external regulatory auditors during active audits.",
-              "D) Safety induction checklists only apply to temporary interns and visitors."
-            ],
-            correctAnswer: 1,
-            explanation: `Under the Australian WHS Act, work health and safety is a shared responsibility. While PCBUs hold the primary duty, the designated audience (${booklet.audience}) must actively participate, cooperate with instructions, and execute hazard audits.`
-          },
-          {
-            question: `According to the overview, which core compliance and risk management goal is targeted in "${booklet.title}"?`,
-            options: [
-              "A) Enhancing financial ledger audit speeds",
-              "B) Refining corporate graphic standards",
-              `C) ${booklet.description}`,
-              "D) Managing team vacation leave schedules"
-            ],
-            correctAnswer: 2,
-            explanation: `The booklet directly targets: ${booklet.description}. Understanding this primary objective is essential for implementing the correct hazard controls.`
-          },
-          {
-            question: "Under standard Australian WHS practices, what is the mandatory immediate action upon spotting a new workplace hazard?",
-            options: [
-              "A) Leave the area and allow someone else to encounter it first",
-              "B) Document it in personal records and wait for the end of the month to report",
-              "C) Report it immediately to a supervisor or Health and Safety Representative (HSR) and ensure the area is isolated",
-              "D) Inform coworkers but avoid reporting it to management to prevent administrative delay"
-            ],
-            correctAnswer: 2,
-            explanation: "Immediate reporting of hazards is a statutory duty under Australian WHS law. It enables prompt risk assessment, isolation of risk, and implementation of control measures to prevent injuries."
-          }
-        ];
+        const isNdis = booklet.name.toLowerCase().includes("ndis");
+        const isSelfEmployed = booklet.name.toLowerCase().includes("self_employed");
+        if (isNdis) {
+          questions = [
+            {
+              question: "Under the NDIS Quality and Safeguards Commission and WHS rules, which check is mandatory for workers in risk-assessed roles?",
+              options: [
+                "A) Standard driver license check only",
+                "B) A valid NDIS Worker Screening Check registered on the national database",
+                "C) Standard customer service certification",
+                "D) None, checks are only required for medical professionals"
+              ],
+              correctAnswer: 1,
+              explanation: "Under NDIS Commission standards, all workers in risk-assessed roles must possess an active, verified NDIS Worker Screening Check. Maintaining up-to-date clearances is a statutory requirement for both providers and safety administrators."
+            },
+            {
+              question: "If an unauthorized restrictive practice (such as a lock or restraint) is used in an emergency, how quickly must it be reported to the NDIS Commission?",
+              options: [
+                "A) Within 30 days of the occurrence",
+                "B) At the end of the quarterly business review",
+                "C) Immediately (within 24 hours)",
+                "D) Only if the participant or family lodges a formal complaint"
+              ],
+              correctAnswer: 2,
+              explanation: "Under the NDIS Reportable Incidents Rules, any unauthorized use of a restrictive practice constitutes a reportable incident and must be reported to the NDIS Quality and Safeguards Commission within 24 hours."
+            },
+            {
+              question: "Disability support workers operating alone in a client's private home face increased physical and psychosocial hazards. What is a key WHS risk control for lone worker environments?",
+              options: [
+                "A) Avoid entering homes entirely and request video calls only",
+                "B) Carrying heavy mechanical containment tools",
+                "C) Conducting pre-entry dynamic risk assessments (pets, hazards, behavior) and using real-time GPS duress alarm checks",
+                "D) Requiring that clients sign a liability waiver for any injury that occurs on private property"
+              ],
+              correctAnswer: 2,
+              explanation: "For lone work safety in the NDIS sector, conducting dynamic pre-entry assessments and establishing active duress systems are highly compliant and recommended safety control practices under current WHS guidelines."
+            }
+          ];
+        } else if (isSelfEmployed) {
+          questions = [
+            {
+              question: "As a self-employed individual or sole trader in Australia, how does the Work Health and Safety (WHS) Act classify your legal status and safety obligations?",
+              options: [
+                "A) You are classified as neither a worker nor a PCBU, exempting you from physical hazard duties.",
+                "B) You are classified as both a PCBU (employer) and a worker, giving you dual statutory duty-of-care obligations.",
+                "C) Your safety duties are completely transferred to your clients or the site owners.",
+                "D) You are only subject to voluntary mental health recommendations, not active physical safety laws."
+              ],
+              correctAnswer: 1,
+              explanation: "Under Australian WHS law, a self-employed person is classified as both a PCBU and a worker. This dual status grants you strict legal duties to ensure, so far as is reasonably practicable, your own health and safety, as well as the safety of other contractors or clients affected by your business activities."
+            },
+            {
+              question: "Which of the following describes the minimum statutory first-aid and emergency preparedness requirements for self-employed individuals?",
+              options: [
+                "A) You do not need first-aid kits unless you employ at least five people.",
+                "B) Maintaining a compliant, fully stocked WHS First Aid Kit and possessing an active communication device to coordinate emergency ambulance or medical responses.",
+                "C) Self-employed persons are legally required to work within 500 meters of a hospital at all times.",
+                "D) First aid is only mandatory when working with high-risk heavy agricultural machinery."
+              ],
+              correctAnswer: 1,
+              explanation: "WHS regulations mandate that self-employed workers must provide adequate first aid equipment (a compliant kit) and access to facilities, as well as a reliable means of communication (charged mobile or satellite duress tracker) to contact emergency services if working alone."
+            },
+            {
+              question: "Solo operators and sole traders face elevated psychosocial hazards like chronic isolation and workload stress. Which of the following is a recommended practice to manage mental health and fatigue?",
+              options: [
+                "A) Working 14-hour days continuously to maximize business profits.",
+                "B) Avoiding any communication with other sole traders to prevent distraction.",
+                "C) Planning scheduled weekly wind-down hours, taking regular rest breaks, and accessing support services like Lifeline or Beyond Blue.",
+                "D) Ignoring fatigue indicators since solo operators are exempt from standard fatigue laws."
+              ],
+              correctAnswer: 2,
+              explanation: "Managing psychological hazards, managing isolation, and preventing burnout are critical WHS obligations. Standard protective practices include scheduling personal downtime, taking regular 15-minute breaks, and leveraging free community support networks like Lifeline and Beyond Blue."
+            }
+          ];
+        } else if (booklet.name.toLowerCase().includes("tax")) {
+          questions = [
+            {
+              question: "What is a key tax compliance obligation for self-employed individuals (sole traders) regarding Income Tax in Australia?",
+              options: [
+                "A) Sole traders are completely exempt from income tax payments.",
+                "B) You must report your business income in your individual tax return, as your business tax TFN is generally the same as your individual TFN.",
+                "C) Sole traders must pay a flat corporate tax rate of 30% from dollar one, separate from personal income.",
+                "D) Income tax is automatically paid by the Australian Taxation Office (ATO) via weekly subsidies."
+              ],
+              correctAnswer: 1,
+              explanation: "In Australia, if you operate as a sole trader, your business income is treated as part of your personal income. You use your individual Tax File Number (TFN) when lodging your tax return and report your business income and expenses there."
+            },
+            {
+              question: "At what threshold of annual turnover is a self-employed individual or sole trader legally required to register for Goods and Services Tax (GST) in Australia?",
+              options: [
+                "A) From dollar one of any sales",
+                "B) Only when annual business turnover reaches $150,000 or more",
+                "C) When your annual business turnover is $75,000 or more ($150,000 or more for non-profit organizations)",
+                "D) GST registration is entirely voluntary and has no mandatory threshold"
+              ],
+              correctAnswer: 2,
+              explanation: "Under Australian tax law, you must register for GST if your annual business turnover is $75,000 or more ($150,000 or more for non-profit organisations), or if you provide taxi or ride-sourcing services regardless of turnover."
+            },
+            {
+              question: "What is the purpose of the Pay As You Go (PAYG) instalments system for self-employed individuals?",
+              options: [
+                "A) To pay off your student or home loans with interest-free government loans",
+                "B) It is a system for making regular payments (usually quarterly) towards your expected end-of-year tax liability to avoid a large tax bill.",
+                "C) To pay weekly wages to yourself that are entirely tax-free",
+                "D) To register employees for superannuation contributions"
+              ],
+              correctAnswer: 1,
+              explanation: "The PAYG instalments system helps self-employed people, sole traders, and investors meet their income tax obligations by making regular payments during the financial year, preventing a massive tax bill during annual lodgments."
+            }
+          ];
+        } else {
+          questions = [
+            {
+              question: `Which of the following describes the correct implementation duty regarding the safety protocols in the booklet "${booklet.title}"?`,
+              options: [
+                "A) Safety guidelines are optional and can be disregarded if timelines are tight.",
+                `B) The target group (${booklet.audience}) must collaborate to execute safe systems of work.`,
+                "C) Safety duties are solely held by external regulatory auditors during active audits.",
+                "D) Safety induction checklists only apply to temporary interns and visitors."
+              ],
+              correctAnswer: 1,
+              explanation: `Under the Australian WHS Act, work health and safety is a shared responsibility. While PCBUs hold the primary duty, the designated audience (${booklet.audience}) must actively participate, cooperate with instructions, and execute hazard audits.`
+            },
+            {
+              question: `According to the overview, which core compliance and risk management goal is targeted in "${booklet.title}"?`,
+              options: [
+                "A) Enhancing financial ledger audit speeds",
+                "B) Refining corporate graphic standards",
+                `C) ${booklet.description}`,
+                "D) Managing team vacation leave schedules"
+              ],
+              correctAnswer: 2,
+              explanation: `The booklet directly targets: ${booklet.description}. Understanding this primary objective is essential for implementing the correct hazard controls.`
+            },
+            {
+              question: "Under standard Australian WHS practices, what is the mandatory immediate action upon spotting a new workplace hazard?",
+              options: [
+                "A) Leave the area and allow someone else to encounter it first",
+                "B) Document it in personal records and wait for the end of the month to report",
+                "C) Report it immediately to a supervisor or Health and Safety Representative (HSR) and ensure the area is isolated",
+                "D) Inform coworkers but avoid reporting it to management to prevent administrative delay"
+              ],
+              correctAnswer: 2,
+              explanation: "Immediate reporting of hazards is a statutory duty under Australian WHS law. It enables prompt risk assessment, isolation of risk, and implementation of control measures to prevent injuries."
+            }
+          ];
+        }
       }
 
       res.json({ bookletName, title: booklet.title, questions });
@@ -294,6 +406,148 @@ Format the output strictly as a JSON array of objects according to the schema.`;
     const groupDetails = booklet.group;
     const targetAudience = booklet.audience;
     const desc = booklet.description;
+
+    const isNdis = filename.toLowerCase().includes("ndis");
+    let ndisSectionHtml = "";
+    if (isNdis) {
+      ndisSectionHtml = `
+        <!-- Section 4: Special NDIS Legislation & WHS Updates (2026/2027) -->
+        <div class="space-y-4 border-t border-amber-500/20 pt-6">
+          <div class="flex items-center space-x-2">
+            <span class="bg-amber-500 text-black text-[10px] font-mono uppercase font-bold px-2.5 py-1 rounded">NDIS SPECIALIST</span>
+            <h3 class="text-sm font-mono font-bold uppercase tracking-wider text-amber-500">Section 4: NDIS Quality & Safeguards Compliance Updates (2026/2027)</h3>
+          </div>
+          
+          <p class="text-sm leading-relaxed text-slate-300 font-sans">
+            Work Health & Safety (WHS) for National Disability Insurance Scheme (NDIS) support environments is governed by the co-jurisdiction of state-based WHS Regulators (e.g., SafeWork NSW, WorkSafe Victoria) and the federal <strong>NDIS Quality and Safeguards Commission</strong>.
+          </p>
+
+          <div class="bg-darkcard border border-amber-500/10 p-5 rounded-2xl space-y-4">
+            <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider font-mono">Mandatory 2026/2027 Legislative Guidelines & Standards:</h4>
+            
+            <div class="space-y-4 text-xs text-slate-300 font-sans">
+              <div class="border-b border-white/5 pb-3">
+                <span class="font-bold text-white block mb-1">1. Mandatory NDIS Worker Screening Check</span>
+                <p class="leading-relaxed text-slate-400">All staff in risk-assessed roles must hold an active NDIS Worker Screening clearance. PCBUs must maintain up-to-date clearances on the national database. Working with an expired or unverified clearance is a direct breach of statutory safety conditions.</p>
+              </div>
+
+              <div class="border-b border-white/5 pb-3">
+                <span class="font-bold text-white block mb-1">2. Elimination of Unregulated Restrictive Practices</span>
+                <p class="leading-relaxed text-slate-400">Under current 2026/2027 guidelines, any use of chemical, mechanical, physical, environmental, or seclusion restraints is strictly prohibited unless authorized under an approved Behavior Support Plan. Stricter statutory reporting requires lodging reports to the NDIS Commission within 5 business days for authorized use, or immediately (within 24 hours) for unauthorized emergency uses.</p>
+              </div>
+
+              <div class="border-b border-white/5 pb-3">
+                <span class="font-bold text-white block mb-1">3. Incident Management & Open Disclosure Mandates</span>
+                <p class="leading-relaxed text-slate-400">The <strong>NDIS (Incident Management and Reportable Incidents) Rules</strong> demand that reportable incidents (e.g., serious injury, abuse, neglect, exploitation, or unauthorized restrictive practices) be reported directly to the NDIS Commission within 24 hours. Under active guidelines, registered providers must practice <strong>Open Disclosure</strong>—openly communicating with, apologizing to, and supporting the impacted participant and their family during reviews.</p>
+              </div>
+
+              <div class="border-b border-white/5 pb-3">
+                <span class="font-bold text-white block mb-1">4. High-Intensity Daily Personal Activities Competency</span>
+                <p class="leading-relaxed text-slate-400">Support workers executing complex assistance (e.g., enteral feeding, catheter care, ventilator management, or tracheostomy care) must hold formal unit-standard competency credentials. Relying on basic peer-to-peer training is no longer legally compliant under safe work directives.</p>
+              </div>
+
+              <div>
+                <span class="font-bold text-white block mb-1">5. Psychosocial Hazard & Lone Worker Safety Registers</span>
+                <p class="leading-relaxed text-slate-400">Support workers operating solo in client residences are exposed to increased psychological and physical risk (burnout, challenging behaviors, isolation). Employers must maintain an active psychosocial hazard risk register and supply lone workers with emergency duress check-ins and safety planning tools.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const isSelfEmployed = filename.toLowerCase().includes("self_employed");
+    let selfEmployedSectionHtml = "";
+    if (isSelfEmployed) {
+      selfEmployedSectionHtml = `
+        <!-- Section 4: Self-Employed WHS, First Aid & Mental Health Compliance -->
+        <div class="space-y-4 border-t border-amber-500/20 pt-6">
+          <div class="flex items-center space-x-2">
+            <span class="bg-amber-500 text-black text-[10px] font-mono uppercase font-bold px-2.5 py-1 rounded">SOLE TRADER SPECIALIST</span>
+            <h3 class="text-sm font-mono font-bold uppercase tracking-wider text-amber-500">Section 4: Self-Employed WHS, First Aid & Mental Health Guidelines (2026/2027)</h3>
+          </div>
+          
+          <p class="text-sm leading-relaxed text-slate-300 font-sans">
+            Under the Australian <strong>Work Health and Safety Act 2011</strong>, self-employed individuals and sole traders are legally classified as both a <strong>PCBU</strong> (Person Conducting a Business or Undertaking) and a worker. This dual status grants you ultimate statutory duty-of-care obligations to ensure your own health and safety, as well as the safety of clients, visitors, and other contractors.
+          </p>
+
+          <div class="bg-darkcard border border-amber-500/10 p-5 rounded-2xl space-y-5">
+            <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider font-mono">Core Self-Employed Compliance Standards:</h4>
+            
+            <div class="space-y-4 text-xs text-slate-300 font-sans">
+              <div class="border-b border-white/5 pb-3.5">
+                <span class="font-bold text-white block mb-1">1. Dual Statutory Duty-of-Care Duties</span>
+                <p class="leading-relaxed text-slate-400">As a self-employed operator, you hold primary liability to eliminate or minimize occupational risks. This includes assessing client home workspaces, validating tool/equipment safety guards, and preparing Safe Work Method Statements (SWMS) if working in high-risk zones. You are legally responsible for not endangering others through your work.</p>
+              </div>
+
+              <div class="border-b border-white/5 pb-3.5">
+                <span class="font-bold text-white block mb-1">2. Mandatory First Aid Kits & Incident Contingencies</span>
+                <p class="leading-relaxed text-slate-400">Even when operating solo, you are required to maintain a compliant, accessible <strong>WHS First Aid Kit</strong> (Class A/B) stocked for common industry injuries (burns, deep cuts, eye wash, splinters). Additionally, you must carry an active digital communication device (satellite communicator, charged phone, or duress app) to coordinate quick emergency ambulance/medical responses when working remotely or in isolated client sites.</p>
+              </div>
+
+              <div class="border-b border-white/5 pb-3.5">
+                <span class="font-bold text-white block mb-1">3. Mental Health, Isolation & Burnout Management</span>
+                <p class="leading-relaxed text-slate-400">Operating a sole-trader business presents extreme psychological risks, including chronic isolation, long working hours, unstable financial flows, and the absence of traditional HR support systems. You should actively implement psychosocial protective factors: scheduled weekly business wind-down hours, peer support check-ins, and proactive stress-reduction techniques. You can access free mental health assistance through <strong>Lifeline (13 11 14)</strong>, <strong>Beyond Blue (1300 22 4636)</strong>, or specialized sole trader support lines.</p>
+              </div>
+
+              <div>
+                <span class="font-bold text-white block mb-1">4. Solo Worker Risk Profiling & Fatigue Management</span>
+                <p class="leading-relaxed text-slate-400">Without peers to monitor your alertness, fatigue is a leading cause of sole-trader vehicle and equipment accidents. Establish strict maximum shift limits, take standard 15-minute micro-breaks every 2 hours of repetitive tasks or driving, and maintain a documented safe work hazard register.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    const isTax = filename.toLowerCase().includes("tax");
+    let taxSectionHtml = "";
+    if (isTax) {
+      taxSectionHtml = `
+        <!-- Section 4: Tax Information & Compliance Guidelines (2026/2027) -->
+        <div class="space-y-4 border-t border-amber-500/20 pt-6">
+          <div class="flex items-center space-x-2">
+            <span class="bg-amber-500 text-black text-[10px] font-mono uppercase font-bold px-2.5 py-1 rounded">TAX SPECIALIST</span>
+            <h3 class="text-sm font-mono font-bold uppercase tracking-wider text-amber-500">Section 4: Australian Tax & Compliance Standards (2026/2027)</h3>
+          </div>
+          
+          <p class="text-sm leading-relaxed text-slate-300 font-sans">
+            Navigating taxation duties as a sole trader, contractor, or employee is a core component of sustainable, legally compliant operations. The <strong>Australian Taxation Office (ATO)</strong> governs compliance, reporting, and statutory filings for the 2026/2027 financial year.
+          </p>
+
+          <div class="bg-darkcard border border-amber-500/10 p-5 rounded-2xl space-y-4">
+            <h4 class="text-xs font-bold text-amber-400 uppercase tracking-wider font-mono">Mandatory 2026/2027 Tax Guidelines & Obligation Checkpoints:</h4>
+            
+            <div class="space-y-4 text-xs text-slate-300 font-sans">
+              <div class="border-b border-white/5 pb-3">
+                <span class="font-bold text-white block mb-1">1. Sole Trader Tax File Numbers & Reporting</span>
+                <p class="leading-relaxed text-slate-400">As a sole trader, you do not need a separate business tax file number (TFN); you file using your individual TFN. Your business net income is included alongside any other personal earnings in your standard annual individual tax return, assessed at standard individual income tax rates.</p>
+              </div>
+
+              <div class="border-b border-white/5 pb-3">
+                <span class="font-bold text-white block mb-1">2. Goods and Services Tax (GST) Thresholds</span>
+                <p class="leading-relaxed text-slate-400">You must register for GST within 21 days if your gross business turnover reaches or is expected to exceed the statutory threshold of <strong>$75,000</strong> per annum ($150,000 for non-profit organizations). If registered, you must apply a 10% GST to taxable sales and file quarterly or annual Business Activity Statements (BAS).</p>
+              </div>
+
+              <div class="border-b border-white/5 pb-3">
+                <span class="font-bold text-white block mb-1">3. Pay As You Go (PAYG) Instalment Obligations</span>
+                <p class="leading-relaxed text-slate-400">The PAYG instalments system requires sole traders, self-employed contractors, and investors to make regular, proactive payments (usually quarterly) toward their estimated end-of-year tax liability. This prevents a large, unexpected tax bill during annual lodgment season.</p>
+              </div>
+
+              <div class="border-b border-white/5 pb-3">
+                <span class="font-bold text-white block mb-1">4. Deductible Business Expenses & Record Retention</span>
+                <p class="leading-relaxed text-slate-400">You can claim tax deductions for most business-related expenses (e.g., motor vehicle travel, equipment, home office costs, and insurance) provided they are directly related to earning your income. You are legally required to retain clear, comprehensive receipts, logbooks, and tax invoices for at least <strong>5 years</strong> as audit evidence.</p>
+              </div>
+
+              <div>
+                <span class="font-bold text-white block mb-1">5. Superannuation Guarantee (SG) & Personal Contributions</span>
+                <p class="leading-relaxed text-slate-400">While sole traders are not legally forced to pay superannuation for themselves, doing so is highly recommended for long-term financial security and offers valuable tax-deductible benefits up to concessional caps. If you employ workers, you MUST pay the mandatory statutory Superannuation Guarantee percentage directly to their nominated super accounts.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
 
     res.send(`
 <!DOCTYPE html>
@@ -454,6 +708,9 @@ Format the output strictly as a JSON array of objects according to the schema.`;
             </div>
           </div>
         </div>
+        \${ndisSectionHtml}
+        \${selfEmployedSectionHtml}
+        \${taxSectionHtml}
       </div>
     </section>
 
