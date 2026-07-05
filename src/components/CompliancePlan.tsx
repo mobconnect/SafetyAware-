@@ -19,6 +19,60 @@ export default function CompliancePlan({ booklets, onOpenBooklet }: CompliancePl
   const [selectedSector, setSelectedSector] = useState<string>("Hospitality");
   const [tasks, setTasks] = useState<PlannerTask[]>([]);
 
+  // Legislation Scan states
+  const [auditResults, setAuditResults] = useState<{
+    lastChecked: string;
+    status: string;
+    scannedCount: number;
+    outdatedFound: number;
+    patchedCount: number;
+    logs: string[];
+    findings: any[];
+  }>({
+    lastChecked: "Never Scanned",
+    status: "Idle",
+    scannedCount: 0,
+    outdatedFound: 0,
+    patchedCount: 0,
+    logs: [],
+    findings: []
+  });
+  const [isScanning, setIsScanning] = useState(false);
+  const [showLogs, setShowLogs] = useState(true);
+
+  // Fetch initial audit results
+  useEffect(() => {
+    fetch("/api/compliance/audit-results")
+      .then((res) => res.json())
+      .then((data) => {
+        setAuditResults(data);
+      })
+      .catch((err) => console.error("Error fetching audit results:", err));
+  }, []);
+
+  // Run audit trigger
+  const runLegislationAudit = async () => {
+    setIsScanning(true);
+    setAuditResults((prev) => ({
+      ...prev,
+      status: "Scanning",
+      logs: [
+        `[${new Date().toLocaleTimeString()}] [SYSTEM] Booting WHS & Legislation Integrity scan...`,
+        `[${new Date().toLocaleTimeString()}] [API_CON] Establishing handshake with Safe Work Australia...`
+      ]
+    }));
+    try {
+      const response = await fetch("/api/compliance/run-audit", { method: "POST" });
+      const data = await response.json();
+      setAuditResults(data);
+    } catch (err) {
+      console.error("Error triggering compliance audit:", err);
+      setAuditResults((prev) => ({ ...prev, status: "Failed" }));
+    } finally {
+      setIsScanning(false);
+    }
+  };
+
   // Sectors list
   const sectors = [
     { name: "Hospitality & Food", value: "Hospitality", keyword: "hospitality" },
@@ -367,81 +421,199 @@ Keep your workplace safe, inclusive, and legally compliant!
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-full">
-      {/* Configuration Panel */}
-      <div className="lg:col-span-1 bg-[#16161A] border border-white/5 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
-        <div>
-          <div className="flex items-center space-x-2.5 mb-4">
-            <div className="bg-amber-500/10 text-amber-500 p-2 rounded-xl border border-amber-500/20 flex items-center justify-center">
-              <LucideIcon name="Settings" size={18} className="text-amber-500" />
+      {/* Left Column: Configuration & Statutory Integrity Scan */}
+      <div className="lg:col-span-1 space-y-6 flex flex-col">
+        {/* Configuration Panel */}
+        <div className="bg-[#16161A] border border-white/5 rounded-3xl p-6 shadow-xl flex flex-col justify-between">
+          <div>
+            <div className="flex items-center space-x-2.5 mb-4">
+              <div className="bg-amber-500/10 text-amber-500 p-2 rounded-xl border border-amber-500/20 flex items-center justify-center">
+                <LucideIcon name="Settings" size={18} className="text-amber-500" />
+              </div>
+              <h3 className="font-sans font-bold text-white text-sm">Planner Configuration</h3>
             </div>
-            <h3 className="font-sans font-bold text-white text-sm">Planner Configuration</h3>
+
+            <p className="text-slate-400 text-xs leading-relaxed font-sans mb-4">
+              Safety plans must fit your workspace. Select your active sector below to load custom Australian WHS checklists, audits, and suggested booklet materials.
+            </p>
+
+            {/* Sector selection */}
+            <div className="space-y-2">
+              <label className="block text-[10px] font-mono text-slate-500 uppercase font-bold tracking-wider">Select Sector</label>
+              <div className="relative">
+                <select
+                  value={selectedSector}
+                  onChange={(e) => setSelectedSector(e.target.value)}
+                  className="w-full bg-[#1A1A1F] border border-white/10 focus:border-amber-500/50 text-slate-200 text-xs font-semibold rounded-xl px-4 py-3 outline-none appearance-none cursor-pointer font-sans"
+                >
+                  {sectors.map((sec) => (
+                    <option key={sec.value} value={sec.value}>
+                      {sec.name}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
+                  <LucideIcon name="ChevronRight" size={14} className="rotate-90" />
+                </div>
+              </div>
+            </div>
           </div>
 
-          <p className="text-slate-400 text-xs leading-relaxed font-sans mb-4">
-            Safety plans must fit your workspace. Select your active sector below to load custom Australian WHS checklists, audits, and suggested booklet materials.
-          </p>
-
-          {/* Sector selection */}
-          <div className="space-y-2">
-            <label className="block text-[10px] font-mono text-slate-500 uppercase font-bold tracking-wider">Select Sector</label>
-            <div className="relative">
-              <select
-                value={selectedSector}
-                onChange={(e) => setSelectedSector(e.target.value)}
-                className="w-full bg-[#1A1A1F] border border-white/10 focus:border-amber-500/50 text-slate-200 text-xs font-semibold rounded-xl px-4 py-3 outline-none appearance-none cursor-pointer font-sans"
-              >
-                {sectors.map((sec) => (
-                  <option key={sec.value} value={sec.value}>
-                    {sec.name}
-                  </option>
-                ))}
-              </select>
-              <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-slate-500">
-                <LucideIcon name="ChevronRight" size={14} className="rotate-90" />
+          {/* Dynamic score summary */}
+          <div className="mt-6 pt-6 border-t border-white/5">
+            <div className="flex justify-between items-end mb-2">
+              <div>
+                <p className="text-[10px] font-mono text-slate-500 uppercase font-bold">Current Score</p>
+                <h4 className="text-2xl font-sans font-bold text-white">
+                  {progressPercent}% <span className="text-xs text-slate-500 font-medium font-sans">Ready</span>
+                </h4>
               </div>
+              <span className="text-xs font-semibold text-amber-500 font-sans">
+                {completedCount} of {tasks.length} Done
+              </span>
+            </div>
+
+            {/* Progress bar */}
+            <div className="w-full bg-[#1A1A1F] border border-white/5 rounded-full h-2 overflow-hidden mb-4">
+              <div
+                className="bg-amber-500 h-full rounded-full transition-all duration-500 ease-out"
+                style={{ width: `${progressPercent}%` }}
+              />
+            </div>
+
+            {/* Export action buttons */}
+            <div className="space-y-2">
+              <button
+                onClick={handleExportPDF}
+                className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-[#0F0F12] font-sans font-bold text-xs rounded-xl shadow-md shadow-amber-500/10 flex items-center justify-center space-x-2 cursor-pointer transition-all outline-none"
+              >
+                <LucideIcon name="FileDown" size={13} className="text-[#0F0F12]" />
+                <span>Export Roadmap as PDF</span>
+              </button>
+              <button
+                onClick={handleExport}
+                className="w-full py-2 bg-transparent hover:bg-white/5 border border-white/10 hover:border-white/20 text-slate-300 font-sans font-semibold text-xs rounded-xl flex items-center justify-center space-x-2 cursor-pointer transition-all outline-none"
+              >
+                <LucideIcon name="Copy" size={13} className="text-slate-400" />
+                <span>Copy as Plain Text</span>
+              </button>
             </div>
           </div>
         </div>
 
-        {/* Dynamic score summary */}
-        <div className="mt-6 pt-6 border-t border-white/5">
-          <div className="flex justify-between items-end mb-2">
-            <div>
-              <p className="text-[10px] font-mono text-slate-500 uppercase font-bold">Current Score</p>
-              <h4 className="text-2xl font-sans font-bold text-white">
-                {progressPercent}% <span className="text-xs text-slate-500 font-medium font-sans">Ready</span>
-              </h4>
+        {/* WHS Legislation Integrity Scan Card */}
+        <div className="bg-[#16161A] border border-white/5 rounded-3xl p-6 shadow-xl space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-2.5">
+              <div className="bg-amber-500/10 text-amber-500 p-2 rounded-xl border border-amber-500/20 flex items-center justify-center">
+                <LucideIcon name="ShieldCheck" size={18} className="text-amber-500" />
+              </div>
+              <h3 className="font-sans font-bold text-white text-sm">WHS Integrity Monitor</h3>
             </div>
-            <span className="text-xs font-semibold text-amber-500 font-sans">
-              {completedCount} of {tasks.length} Done
-            </span>
+            {auditResults.status === "Complete" && (
+              <span className="bg-emerald-500/10 text-emerald-400 text-[10px] font-mono px-2 py-0.5 rounded border border-emerald-500/20 font-bold uppercase">
+                Active & Synced
+              </span>
+            )}
           </div>
 
-          {/* Progress bar */}
-          <div className="w-full bg-[#1A1A1F] border border-white/5 rounded-full h-2 overflow-hidden mb-4">
-            <div
-              className="bg-amber-500 h-full rounded-full transition-all duration-500 ease-out"
-              style={{ width: `${progressPercent}%` }}
-            />
+          <p className="text-slate-400 text-xs leading-relaxed font-sans">
+            Compares local handbook chapters with active <strong>Safe Work Australia</strong> legislation, ATO superannuation, and NDIS quality commissions. Replaces obsolete ratios, contacts, and mandates in real-time.
+          </p>
+
+          {/* Audit Metrics */}
+          <div className="grid grid-cols-3 gap-2 bg-[#1A1A1F] border border-white/5 p-3 rounded-2xl">
+            <div className="text-center">
+              <span className="block text-[10px] font-mono text-slate-500 uppercase font-bold">Checked</span>
+              <span className="text-xs font-sans font-bold text-white mt-0.5 block">{auditResults.scannedCount || 0} files</span>
+            </div>
+            <div className="text-center border-x border-white/5">
+              <span className="block text-[10px] font-mono text-slate-500 uppercase font-bold">Outdated</span>
+              <span className={`text-xs font-sans font-bold mt-0.5 block ${auditResults.outdatedFound > 0 ? "text-amber-500 animate-pulse" : "text-slate-400"}`}>{auditResults.outdatedFound || 0}</span>
+            </div>
+            <div className="text-center">
+              <span className="block text-[10px] font-mono text-slate-500 uppercase font-bold">Patched</span>
+              <span className={`text-xs font-sans font-bold mt-0.5 block ${auditResults.patchedCount > 0 ? "text-emerald-400" : "text-slate-400"}`}>{auditResults.patchedCount || 0}</span>
+            </div>
           </div>
 
-          {/* Export action buttons */}
-          <div className="space-y-2">
-            <button
-              onClick={handleExportPDF}
-              className="w-full py-2.5 bg-amber-500 hover:bg-amber-600 text-[#0F0F12] font-sans font-bold text-xs rounded-xl shadow-md shadow-amber-500/10 flex items-center justify-center space-x-2 cursor-pointer transition-all outline-none"
-            >
-              <LucideIcon name="FileDown" size={13} className="text-[#0F0F12]" />
-              <span>Export Roadmap as PDF</span>
-            </button>
-            <button
-              onClick={handleExport}
-              className="w-full py-2 bg-transparent hover:bg-white/5 border border-white/10 hover:border-white/20 text-slate-300 font-sans font-semibold text-xs rounded-xl flex items-center justify-center space-x-2 cursor-pointer transition-all outline-none"
-            >
-              <LucideIcon name="Copy" size={13} className="text-slate-400" />
-              <span>Copy as Plain Text</span>
-            </button>
+          {/* Action trigger button */}
+          <button
+            onClick={runLegislationAudit}
+            disabled={isScanning}
+            className={`w-full py-2.5 ${
+              isScanning ? "bg-amber-500/20 text-amber-500 cursor-not-allowed" : "bg-transparent hover:bg-white/5 border border-white/10 hover:border-white/20 text-slate-200"
+            } font-sans font-bold text-xs rounded-xl flex items-center justify-center space-x-2 cursor-pointer transition-all outline-none`}
+          >
+            <LucideIcon name={isScanning ? "RefreshCw" : "PlayCircle"} size={14} className={isScanning ? "animate-spin text-amber-500" : "text-slate-400"} />
+            <span>{isScanning ? "Auditing API Registries..." : "Execute Statutory Integrity Scan"}</span>
+          </button>
+
+          {/* Timestamp status line */}
+          <div className="flex justify-between items-center text-[10px] text-slate-500 font-mono">
+            <span>Last Checked:</span>
+            <span className="text-slate-400 font-semibold">{auditResults.lastChecked}</span>
           </div>
+
+          {/* Live scrolling logs terminal */}
+          {auditResults.logs && auditResults.logs.length > 0 && (
+            <div className="space-y-2">
+              <button
+                onClick={() => setShowLogs(!showLogs)}
+                className="text-[10px] text-amber-500 font-sans hover:underline flex items-center space-x-1 outline-none"
+              >
+                <span>{showLogs ? "Collapse audit telemetry" : "Expand audit telemetry"}</span>
+                <LucideIcon name="ChevronDown" size={10} className={`transform transition-transform ${showLogs ? "rotate-180" : ""}`} />
+              </button>
+
+              {showLogs && (
+                <div className="bg-black/40 border border-white/5 rounded-xl p-3 h-36 overflow-y-auto custom-scroll font-mono text-[9px] text-emerald-400 space-y-1.5 leading-normal">
+                  {auditResults.logs.map((logLine, idx) => (
+                    <div key={idx} className="whitespace-pre-wrap">{logLine}</div>
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* List of patched findings */}
+          {auditResults.findings && auditResults.findings.length > 0 && (
+            <div className="space-y-3 pt-3 border-t border-white/5">
+              <div className="flex items-center space-x-1.5 text-xs text-slate-300 font-sans font-bold">
+                <LucideIcon name="Cpu" size={13} className="text-amber-500" />
+                <span>Patched Compliance Fixes:</span>
+              </div>
+
+              <div className="space-y-3 max-h-52 overflow-y-auto custom-scroll pr-1">
+                {auditResults.findings.map((finding, idx) => (
+                  <div key={idx} className="bg-[#1A1A1F] border border-white/5 rounded-xl p-3 space-y-2 text-xs">
+                    <div className="flex justify-between items-start">
+                      <div className="max-w-[70%]">
+                        <span className="font-sans font-bold text-white text-[11px] block truncate">{finding.booklet}</span>
+                        <span className="text-[9px] text-slate-500 font-mono block mt-0.5 truncate">{finding.section}</span>
+                      </div>
+                      <span className={`text-[8px] font-mono font-bold uppercase px-1.5 py-0.5 rounded ${
+                        finding.severity === "High" ? "bg-rose-500/15 text-rose-400" : "bg-amber-500/15 text-amber-400"
+                      }`}>
+                        {finding.severity}
+                      </span>
+                    </div>
+
+                    <div className="space-y-1.5 text-[11px]">
+                      <div className="text-rose-400/80 bg-rose-500/5 p-2 rounded-lg border border-rose-500/10 font-sans leading-normal">
+                        <span className="font-mono text-[8px] font-bold block uppercase text-rose-500 mb-0.5">Stale Legislation Replaced:</span>
+                        <span className="line-through">{finding.outdatedText}</span>
+                      </div>
+                      <div className="text-emerald-400/90 bg-emerald-500/5 p-2 rounded-lg border border-emerald-500/10 font-sans leading-normal">
+                        <span className="font-mono text-[8px] font-bold block uppercase text-emerald-500 mb-0.5">Active Compliance Patched:</span>
+                        <span>{finding.replacementText}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

@@ -582,5 +582,16 @@ export const booklets: Booklet[] = [
     iconName: "Scale",
     audience: "All Employers, Sole Traders & Employees",
     year: "2026"
+  },
+  {
+    name: "first_aid_and_mental_health_handbook_2026.pdf",
+    title: "Australian First Aid & Mental Health Compliance Handbook 2026",
+    path: "all_pdf_booklets_no_index/first_aid_and_mental_health_handbook_2026.pdf",
+    group: "Core and Support",
+    tags: ["core-and-support", "safetyaware", "first-aid", "mental-health", "2026", "2027"],
+    description: "The complete guide to Australian First Aid and Mental Health First Aid compliance, detailing certified training locations, helplines, emergency protocols, and tailored first aid requirements for all industries.",
+    iconName: "Heart",
+    audience: "All Industries, Employers, First Aid Officers & Mental Health Advocates",
+    year: "Both"
   }
 ];
