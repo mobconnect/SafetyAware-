@@ -1,0 +1,8 @@
+{
+  "name": "SafetyAware",
+  "description": "SafetyAware is an interactive WHS and respectful workplace booklet portal designed for Australian workplace safety guidelines for 2026 and 2027. It features advanced search, organization across groups and industries, and a server-side Gemini-powered Safety Advisor to query compliance, legislation, and safety standards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
