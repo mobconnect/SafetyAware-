@@ -34,3 +34,12 @@ export interface ChatMessage {
   timestamp: string;
   sources?: { title: string; url: string }[];
 }
+
+export const APP_CONFIG = {
+  domain: "justbeyou.com.au",
+  abn: "59 726 146 692",
+  duns: "74-906-8766",
+  portalName: "SafetyAware",
+  tailoredGuidelineYear: "2026/27"
+};
+

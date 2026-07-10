@@ -22,7 +22,9 @@ export default function Header({ activeTab, setActiveTab, advisorUnread }: Heade
                 <span className="font-sans font-bold text-lg tracking-tight text-white">SafetyAware</span>
                 <span className="bg-white/5 text-slate-300 border border-white/10 font-mono text-[10px] uppercase font-bold tracking-wider px-1.5 py-0.5 rounded-md">WHS 2026/27</span>
               </div>
-              <p className="text-xs text-slate-500 font-sans hidden sm:block">Australian Respectful Workplace & Compliance Portal</p>
+              <p className="text-xs text-slate-500 font-sans hidden sm:block" data-domain="justbeyou.com.au">
+                Australian Respectful Workplace & Compliance Portal
+              </p>
             </div>
           </div>
 

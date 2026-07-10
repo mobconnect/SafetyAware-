@@ -447,7 +447,7 @@ export default function App() {
             <p className="text-center md:text-left text-slate-400 font-sans leading-relaxed">
               Copyright © 2026 SafetyAware. All Rights Reserved. Tailored to Australian Work Health and Safety (WHS) Guidelines.
             </p>
-            <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center md:justify-start text-[11px] text-slate-500 font-mono">
+            <div className="flex flex-wrap gap-x-3 gap-y-1 justify-center md:justify-start text-[11px] text-slate-500 font-mono" data-domain="justbeyou.com.au">
               <span>ABN: 59 726 146 692</span>
               <span className="text-slate-700">|</span>
               <span>DUNS: 74-906-8766</span>

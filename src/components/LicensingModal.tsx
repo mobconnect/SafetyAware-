@@ -65,7 +65,7 @@ export default function LicensingModal({ isOpen, onClose }: LicensingModalProps)
                 <LucideIcon name="Award" size={15} />
                 <span>Regulatory Registrations</span>
               </h3>
-              <div className="bg-[#1A1A22] border border-white/5 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="bg-[#1A1A22] border border-white/5 rounded-xl p-4 grid grid-cols-1 sm:grid-cols-2 gap-4" data-domain-canonical="justbeyou.com.au">
                 <div>
                   <span className="text-[10px] font-mono text-slate-500 uppercase font-bold block">Australian Business Number (ABN)</span>
                   <span className="text-slate-200 font-mono text-xs font-semibold">59 726 146 692</span>
